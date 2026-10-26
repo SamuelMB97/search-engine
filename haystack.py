@@ -5,7 +5,7 @@ class HayStack():
     def __init__(self, url, max_search_deapth=3):
         self.url = url
         self.max_search_deapth = max_search_deapth
-        self.index, self.graph = self.crawl_recursive(self.url)
+        self.index, self.graph = self.crawl_recursive(self.url) # TODO just make crawl_recursive set the variables.
         assert 0
         self.compute_ranks(self.graph)
 

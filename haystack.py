@@ -1,14 +1,16 @@
-
+import requests
+import re
 
 class HayStack():
     def __init__(self, url, max_search_deapth=3):
         self.url = url
-        self.max_search_deapth = self.max_search_deapth
-        self.index, self.graph = self.crawl_recursive()
+        self.max_search_deapth = max_search_deapth
+        self.index, self.graph = self.crawl_recursive(self.url)
+        assert 0
         self.compute_ranks(self.graph)
 
 
-    def crawl_recursive(self, cur_deapth=0):
+    def crawl_recursive(self, url, cur_deapth=0):
         """Crawls starting from the given url, indexing words and 
         graphing web links
        
@@ -19,11 +21,35 @@ class HayStack():
         1. An index that maps every word encountered on each crawled 
         page to a list of URLs of all the pages that contain that 
         word.
+        ex/
+        index = {'word': {a, b, c}, 'the': {d, e, f}, 'delight': {g, h}}
 
         2.A graph that maps every URL encountered to a list of the web 
-        pages it links to directly."""
+        pages it links to directly.
+        ex/
+        graph = {a: {1, 2, 3}, b: {4, 5}}"""
+        content = requests.get(url, headers={"User-Agent": "XY"}).text
+        print(content)
+        
+        # Get words
+        words = set(self.get_words(content))
+        print(words)
+    
+        # Get links
+        links = set(self.get_links(content))
+        print(links)
+
 
         return (None, None)
+
+
+    def get_words(self, content):
+        no_html = re.sub(r"<.*?>", "", content)
+        return re.findall(r"[a-zA-Z]+[a-zA-Z']*", no_html) # TODO double check this pattern
+
+    def get_links(self, content):
+        links = re.findall(r"""<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']""", content)
+        return links
 
 
     def compute_ranks(self, graph):

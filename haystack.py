@@ -5,8 +5,16 @@ class HayStack():
     def __init__(self, url, max_search_deapth=3):
         self.url = url
         self.max_search_deapth = max_search_deapth
-        self.index, self.graph = self.crawl_recursive(self.url) # TODO just make crawl_recursive set the variables.
-        assert 0
+
+        self.index = dict()
+        self.graph = dict()
+        self.crawl_recursive(self.url) # TODO just make crawl_recursive set the variables.
+        """print("index:")
+        print(self.index)
+        print()
+        print("graph")
+        for page, connections in self.graph.items():
+            print(f"{page}: {connections}")"""
         self.compute_ranks(self.graph)
 
 
@@ -29,18 +37,30 @@ class HayStack():
         ex/
         graph = {a: {1, 2, 3}, b: {4, 5}}"""
         content = requests.get(url, headers={"User-Agent": "XY"}).text
-        print(content)
+        #print(content)
         
         # Get words
         words = set(self.get_words(content))
-        print(words)
+        #print(words)
+
+        for word in words:
+            if word in self.index:
+                self.index[word].add(url)
+            else:
+                self.index[word] = {url}
     
         # Get links
         links = set(self.get_links(content))
         print(links)
 
+        self.graph[url] = set()
+        for link in links:
+            if link not in self.graph[url]:
+                self.graph[url].add(link)
 
-        return (None, None)
+            if cur_deapth <= self.max_search_deapth and \
+                link not in self.graph.keys():
+                self.crawl_recursive(link, cur_deapth=cur_deapth+1)
 
 
     def get_words(self, content):

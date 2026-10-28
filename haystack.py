@@ -8,13 +8,8 @@ class HayStack():
 
         self.index = dict()
         self.graph = dict()
-        self.crawl_recursive(self.url) # TODO just make crawl_recursive set the variables.
-        """print("index:")
-        print(self.index)
-        print()
-        print("graph")
-        for page, connections in self.graph.items():
-            print(f"{page}: {connections}")"""
+        self.crawl_recursive(self.url)
+
         self.compute_ranks(self.graph)
 
 
@@ -100,4 +95,14 @@ class HayStack():
     def lookup(self, search_key):
         """Takes a word as a search key and outputs the webpages that 
         contain that word in rank order, highest to lowest."""
-        pass
+        hits = []
+        for url in self.index[search_key.lower()]:# for each url the word shows up in...
+            rank = self.ranks[url]
+            hits.append((url, rank))
+        hits.sort(key=lambda x: x[1], reverse=True)
+        return [x[0] for x in hits]
+            
+
+
+
+

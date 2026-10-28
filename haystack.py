@@ -44,6 +44,7 @@ class HayStack():
         #print(words)
 
         for word in words:
+            word = word.lower()
             if word in self.index:
                 self.index[word].add(url)
             else:
@@ -51,7 +52,7 @@ class HayStack():
     
         # Get links
         links = set(self.get_links(content))
-        print(links)
+        #print(links)
 
         self.graph[url] = set()
         for link in links:

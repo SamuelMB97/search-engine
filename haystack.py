@@ -55,7 +55,7 @@ class HayStack():
                 self.graph[url].add(link)
 
             if cur_deapth <= self.max_search_deapth and \
-                link not in self.graph.keys():
+                link not in self.graph.keys(): # Don't want to crawl a page twice
                 self.crawl_recursive(link, cur_deapth=cur_deapth+1)
 
 
